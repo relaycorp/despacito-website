@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'The Despacito DDoS Protection Protocol',
-  tagline: 'Open and decentralised DDoS protection',
+  tagline: 'Open and decentralised Application Layer DDoS protection',
 
   // Set the production url of your site here
   url: 'https://despacito.bot',
@@ -55,8 +55,8 @@ const config: Config = {
         },
         {
           type: 'doc',
-          docId: 'spec',
-          label: 'Draft Spec',
+          docId: 'specs',
+          label: 'Draft specs',
         },
         {
           type: 'doc',
@@ -82,8 +82,8 @@ const config: Config = {
               to: 'overview',
             },
             {
-              label: 'Draft Spec',
-              to: 'spec',
+              label: 'Draft specs',
+              to: 'specs',
             },
             {
               label: 'Contribute',
