@@ -25,3 +25,5 @@ Layer 7-agnostic Protocol
 ### VeraId signature
 
 ### App Integrity assertion
+
+### CAPTCHA solution validation
