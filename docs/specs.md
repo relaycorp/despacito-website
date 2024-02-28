@@ -13,3 +13,15 @@ Layer 7-agnostic Protocol
 ### HTTP
 
 ### TLS
+
+## Credentials
+
+### OAuth2 access token
+
+### Proof of Work
+
+### Proof of Space(time)
+
+### VeraId signature
+
+### App Integrity assertion
