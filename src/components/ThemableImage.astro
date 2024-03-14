@@ -1,0 +1,16 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+    darkBgSrc: any;
+    lightBgSrc: any;
+    alt: string;
+    width: number;
+    densities: number[];
+}
+
+const {darkBgSrc, lightBgSrc, alt, width, densities} = Astro.props;
+---
+
+<Image src={darkBgSrc} alt={alt} class:list="light:sl-hidden" width={width} densities={densities} />
+<Image src={lightBgSrc} alt={alt} class:list="dark:sl-hidden" width={width} densities={densities} />

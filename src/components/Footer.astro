@@ -1,0 +1,62 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import type { Props } from '@astrojs/starlight/props';
+
+import FooterSocialLink from './FooterSocialLink.astro';
+import FooterNavLink from './FooterNavLink.astro';
+
+import ThemableImage from './ThemableImage.astro';
+import relaycorpLogoDark from '../assets/relaycorp-logo-dark.png';
+import relaycorpLogoLight from '../assets/relaycorp-logo-light.png';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<footer class="daisy-footer pt-20 place-content-around">
+    <nav>
+        <h4 class="daisy-footer-title">Community</h4>
+
+        <FooterNavLink text="Discussions" url="https://github.com/relaycorp/despacito-website/discussions" />
+        <FooterNavLink text="Issues" url="https://github.com/relaycorp/despacito-website/issues" />
+    </nav>
+
+    <nav>
+        <h4 class="daisy-footer-title">Relevant projects by Relaycorp</h4>
+
+        <FooterNavLink text="The DDoS Report" url="https://ddos.report" title="Everything app developers and operators need to know about DDoS attacks" />
+        <FooterNavLink text="VeraId" url="https://veraid.net" title="DNS-based authentication, with or without the Internet" />
+        <FooterNavLink text="Awala" url="https://awala.network" title="The computer network on which humankind can truly rely" />
+    </nav>
+
+    <aside class="daisy-footer-center">
+        <p>Brought to you by</p>
+        <a href="https://relaycorp.tech">
+            <ThemableImage
+                    darkBgSrc={relaycorpLogoDark}
+                    lightBgSrc={relaycorpLogoLight}
+                    alt="Relaycorp's logo"
+                    width={relaycorpLogoDark.width / 2}
+                    densities={[1.5, 2]}
+            />
+        </a>
+        <p>Tackling the most crucial and neglected communication problems.</p>
+        <div class="grid grid-flow-col gap-4">
+            <FooterSocialLink name="twitter" url="https://twitter.com/RelaycorpHQ" />
+            <FooterSocialLink name="facebook" url="https://www.facebook.com/Relaycorp/" />
+            <FooterSocialLink name="linkedin" url="https://www.linkedin.com/company/relaycorp" />
+            <FooterSocialLink name="github" url="https://github.com/relaycorp" />
+            <FooterSocialLink name="youtube" url="https://www.youtube.com/@relaycorp" />
+        </div>
+    </aside>
+</footer>
+
+<footer class="daisy-footer daisy-footer-center pt-6">
+    <aside>
+        <p>
+            Copyright © 2024 by Relaycorp and
+            <a href="https://github.com/relaycorp/despacito-website/graphs/contributors">contributors</a>.
+
+            <a href="/about#licence">Some rights reserved</a>.
+        </p>
+    </aside>
+</footer>

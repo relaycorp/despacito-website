@@ -1,0 +1,13 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+
+interface Props {
+    text: string;
+    url: string;
+    title?: string;
+}
+
+const { text, url, title } = Astro.props;
+---
+
+<a class="daisy-link daisy-link-hover" href={url} title={title}>{text}<Icon name="external" /></a>
