@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'The Despacito DDoS Protection Protocol',
-  tagline: 'Open and decentralised Application Layer DDoS protection',
+  tagline: 'Interoperable DDoS protection for the Application Layer',
 
   // Set the production url of your site here
   url: 'https://despacito.bot',
