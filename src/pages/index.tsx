@@ -31,7 +31,7 @@ export default function Home(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      description="The current state of DDoS attacks and how to mitigate them. Aimed at backend developers and protocol designers.">
+      description="Despacito will be an open protocol that avoids, or at least mitigates, DDoS attacks at the Application Layer.">
       <HomepageHeader />
       <main>
         <h1>Title</h1>
