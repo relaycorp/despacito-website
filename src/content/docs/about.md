@@ -4,8 +4,6 @@ sidebar:
   order: 10
 ---
 
-# About Despacito
-
 ## Motivation
 
 Awala.

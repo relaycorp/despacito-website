@@ -4,8 +4,6 @@ sidebar:
   order: 2
 ---
 
-# Draft specs for Despacito
-
 ## Core
 
 Layer 7-agnostic Protocol
