@@ -1,0 +1,26 @@
+title Despacito, HTTP Binding
+
+participant Client
+participant Authorisation service
+participant HTTP Proxy
+participant Origin server
+
+Client->>Authorisation service: Request access
+activate Authorisation service
+note over Authorisation service: Check credentials
+Authorisation service->>Client: Grant access
+deactivate Authorisation service
+
+loop Every message whilst authorisation is valid
+    Client->>HTTP Proxy: Send HTTP request
+    activate HTTP Proxy
+    note over HTTP Proxy: Check authorisation
+    note over HTTP Proxy: Check rate limits
+    HTTP Proxy->>Origin server: Forward HTTP request
+    activate Origin server
+    note over Origin server: Process request
+    Origin server->>HTTP Proxy: Send HTTP response
+    deactivate Origin server
+    HTTP Proxy->>Client: Forward HTTP response
+    deactivate HTTP Proxy
+end

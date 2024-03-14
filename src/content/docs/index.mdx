@@ -1,0 +1,77 @@
+---
+title: 'Despacito: Adaptive application firewall protocol'
+sidebar:
+  order: 0
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+
+<Aside type="caution">
+  As you'll soon realise, this page and the rest of the website are work in progress.
+</Aside>
+
+_Despacito_ is the internal codename for a vendor-neutral,
+DDoS-mitigating, application firewall protocol.
+It's being designed by [Relaycorp](https://relaycorp.tech),
+with a view to proposing it as an Internet Draft (I-D) to the IETF.
+The purpose of this website is to gather feedback before drafting an I-D.
+
+This protocol builds on the research we did for [The DDoS Report](https://ddos.report).
+In fact,
+Despacito packages many of the [recommended mitigations](https://ddos.report/mitigations/) into a coherent protocol,
+requiring minimal input from app developers and operators.
+
+## Introduction
+
+We want [reverse proxies](https://ddos.report/mitigations/reverse-proxies/) to decide whether to
+forward a request to the origin server based on whom the client is,
+what it's attempting to do,
+and the current status of the origin server.
+
+Despacito introduces a new component,
+which may be offered by the origin server itself or a third party:
+An **authorisation server**,
+responsible for authenticating the client's credentials and,
+when authorisation is granted,
+issuing a certificate that the client must use in requests to the proxy
+as it contains all the information the proxy needs to make a decision.
+
+## Decision factors
+
+The proxy will consider the following factors when evaluating an incoming message
+(e.g. HTTP request):
+
+- **The client's identity** per the certificate issued by the authorisation server. For example:
+  - Whether and how the client was [authenticated](https://ddos.report/mitigations/authentication/). If authenticated, a unique client id and the underlying user's id are included. The user id may be anonymised.
+  - Which [cryptographic challenges](https://ddos.report/mitigations/crypto-challenges/) or [CHAPTCHAs](https://ddos.report/mitigations/captchas/) it solved, if any.
+  - Whether the client software is [trusted](https://ddos.report/mitigations/client-integrity/).
+- **The current capacity of the origin server**. This could be provided by the origin server itself, or the platform on which it's running (e.g. the `HorizontalPodAutoscaler` in Kubernetes, serverless products like Google Cloud Run).
+- **The current threat level**, as perceived by the operator of the origin server. For example, the operator might anticipate being the target of an attack following an event.
+
+A fourth factor we're considering is the "cost" of processing that particular type of message.
+
+## Possible outcomes
+
+Based on the factors above, the proxy will take one of the following actions:
+
+- Forward the request to the origin server.
+- Challenge the client to go back to the authorisation server and request a new authorisation with enhanced credentials. This may also be caused by a change in the origin server's capacity or threat level (we're aiming to a Time to Mitigation in the order of seconds).
+- Reject the request with a `40X` status code, or equivalent in another Application Layer protocol.
+- Terminate the TCP connection if there's a strong sign that the client is malicious.
+
+## Example
+
+The following diagram shows a high-level view of the Despacito protocol
+when the client is allowed to communicate with the origin server.
+
+![Layer 7-agnostic diagram of Despacito](../../assets/diagrams/despacito-core.png)
+
+On the other hand, the following diagram shows the same scenario when using HTTP.
+
+![Sequence diagram of the HTTP binding of Despacito](../../assets/diagrams/despacito-http.png)
+
+## Environmental impact
+
+- Minimise _Proof of Waste_.
+- https://starlight.astro.build/environmental-impact/

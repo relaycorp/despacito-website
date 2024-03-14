@@ -1,0 +1,21 @@
+title Despacito core (L7-agnostic)
+
+participant Client
+participant Authorisation service
+participant Proxy
+participant Origin server
+
+Client->>Authorisation service: Request access
+activate Authorisation service
+note over Authorisation service: Check credentials
+Authorisation service->>Client: Grant access
+deactivate Authorisation service
+
+loop Every message whilst authorisation is valid
+    Client->>Proxy: Send message
+    activate Proxy
+    note over Proxy: Check authorisation
+    note over Proxy: Check rate limits
+    Proxy->>Origin server: Proxy message
+    deactivate Proxy
+end
