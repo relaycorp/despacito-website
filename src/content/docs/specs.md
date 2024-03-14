@@ -1,5 +1,7 @@
 ---
 title: Draft specs for Despacito
+sidebar:
+  order: 2
 ---
 
 # Draft specs for Despacito
