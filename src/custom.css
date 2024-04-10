@@ -2,6 +2,15 @@
   border-radius: 33%;
 }
 
+.sl-markdown-content img {
+  border-radius: 0.5rem;
+
+  /* Center images */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 footer a:visited,
 footer a:link {
   color: var(--sl-color-text);
