@@ -1,5 +1,6 @@
 ---
-title: 'Despacito: Adaptive application firewall protocol'
+title: 'Despacito: Rate-limiting protocol to mitigate DDoS attacks'
+description: 'Despacito: Vendor-neutral, rate-limiting protocol to mitigate application layer DDoS attacks'
 sidebar:
   order: 0
 ---
@@ -10,39 +11,52 @@ import { Aside } from '@astrojs/starlight/components';
   As you'll soon realise, this page and the rest of the website are work in progress.
 </Aside>
 
-_Despacito_ is the codename for a vendor-neutral,
-DDoS-mitigating, application firewall protocol.
+_Despacito_ (Spanish for "slowly") is a vendor-neutral,
+rate-limiting protocol to mitigate
+[application layer DDoS attacks](https://ddos.report/overview#application-attacks).
 It's being designed by [Relaycorp](https://relaycorp.tech),
-with a view to proposing it as an Internet Draft (I-D) to the IETF.
+with a view to proposing it as an Internet Draft (I-D).
 The purpose of this website is to gather feedback before writing an I-D.
-
-This protocol builds on the research we did for [The DDoS Report](https://ddos.report).
-In fact,
-Despacito packages many of the [recommended mitigations](https://ddos.report/tactics/) into a coherent protocol,
-requiring minimal input from app developers and operators.
 
 ## Introduction
 
-Despacito is meant to be a pluggable mechanism inside
-[reverse proxies](https://ddos.report/tactics/reverse-proxies/).
-It may always be active,
-or only activated when the origin server is under heavy load
-due to an attack or a legitimate traffic spike,
-and/or the client is deemed suspicious.
+Despacito is a protocol for rate limiting messages forwarded by a
+[reverse proxy](https://ddos.report/tactics/reverse-proxies/) (aka _CDN_) to an origin server.
+It allows the origin server to provide the proxy with client information (e.g. user id, rate limits)
+and origin server state (e.g. current capacity),
+so that the proxy can decide whether to forward messages from any given client.
 
-When active,
-Despacito provides the proxy with enough information about the client (e.g. user id, rate limits)
-and the state of the origin server (e.g. current capacity),
-so that the proxy can decide whether to allow a request.
+**This effectively allows reverse proxies to implement
+[rate limiting on a per-client basis](https://ddos.report/tactics/rate-limiting/)**,
+independently of the client's IP address,
+thus complementing existing rate limiting mechanisms that are based on IP address reputation.
+
+This protocol builds on the research we did for [The DDoS Report](https://ddos.report).
+In fact,
+Despacito packages the following [mitigation tactics](https://ddos.report/tactics/) into a coherent protocol,
+requiring minimal input from app developers and operators:
+
+- [Client authentication](https://ddos.report/tactics/authentication/).
+- [Client-based rate limiting](https://ddos.report/tactics/rate-limiting/).
+- [Cryptographic challenges](https://ddos.report/tactics/crypto-challenges/).
+- [Humanity verification](https://ddos.report/tactics/humanity-verification/).
+- [App attestation](https://ddos.report/tactics/app-attestation/).
+
+Despacito is meant to be pluggable.
+It may always be active,
+or activated on demand when the origin server is under heavy load
+due to an attack or a legitimate traffic spike.
 
 To provide the proxy with information about the client,
-Despacito introduces a new component,
-which may be offered by the origin server itself or a third party:
-An **authorisation service**,
+Despacito introduces a new component:
+an **authorisation service**,
 responsible for authenticating the client and,
 when authorisation is granted,
-issuing a short-lived certificate that the client must use in all requests
-as it contains everything the proxy needs.
+issuing a short-lived certificate.
+This service may be offered by the origin server itself or a third party.
+
+The client must use its certificate in all requests,
+as it contains most of the information that the proxy needs to make a decision.
 
 ## Decision factors
 
@@ -50,10 +64,12 @@ The proxy will consider the following factors when evaluating an incoming messag
 (e.g. HTTP request):
 
 - **The client's identity** per the certificate issued by the authorisation server. For example:
-  - Whether and how the client was [authenticated](https://ddos.report/mitigations/authentication/). If authenticated, a unique client id and the underlying user's id are included. The user id may be anonymised.
-  - Which [cryptographic challenges](https://ddos.report/mitigations/crypto-challenges/) or [CHAPTCHAs](https://ddos.report/mitigations/captchas/) the client solved, if any.
-  - Whether the client software is [trusted](https://ddos.report/mitigations/client-integrity/).
-  - The client's [rate limits](https://ddos.report/mitigations/rate-limiting/).
+  - Whether and how the client was [authenticated](https://ddos.report/tactics/authentication/). If authenticated, a unique client id and the underlying user's id are included. The user id may be anonymised.
+  - Which [cryptographic challenges](https://ddos.report/tactics/crypto-challenges/) the client solved, if any.
+  - Which [humanity verification tests](https://ddos.report/tactics/humanity-verification/) the client solved, if any.
+  - Whether the client software is [trusted](https://ddos.report/tactics/app-attestation/).
+  - The client's [rate limits](https://ddos.report/tactics/rate-limiting/) (e.g. 5 requests per minute).
+    Alternatively, we may let the proxy determine the rate limit from the other decision factors.
 - **The current capacity of the origin server**,
   as a float between 0.0 (idle) and 1.0 (at capacity), inclusive.
   This could be provided by the origin server itself,
@@ -67,8 +83,9 @@ The proxy will consider the following factors when evaluating an incoming messag
   For example, the operator might anticipate being the target of an attack in the aftermath of an event.
   The threat level is a float between 0.0 (no threat) and 1.0 (an attack is imminent), inclusive.
 
-A fourth factor we're considering is the "cost" of processing that particular type of message
-(e.g. HTTP request).
+A fourth factor we're considering is the "cost" of processing that particular type of incoming message.
+For example,
+an HTTP request to an endpoint that performs a computationally or financially expensive operation.
 
 ## Possible outcomes
 
@@ -94,9 +111,10 @@ On the other hand, the following diagram shows the same scenario when using HTTP
 
 ![Sequence diagram of the HTTP binding of Despacito](../../assets/diagrams/despacito-http.png)
 
-## Environmental impact
+## Collateral damage
 
-TODO. Expand on the following:
-
-- Minimise _Proof of Waste_.
-- See: https://starlight.astro.build/environmental-impact/
+Certain DDoS mitigation tactics,
+such as cryptographic challenges,
+have the potential to harm both the user experience and the environment if not properly implemented or configured.
+We should encourage developers and operators to adopt such tactics in an adaptive manner,
+proportional to the risk to the origin server.
