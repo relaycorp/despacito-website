@@ -4,9 +4,9 @@ sidebar:
   order: 10
 ---
 
-## Motivation
-
-Awala.
+Despacito has been conceived and is being led by [Relaycorp](https://relaycorp.tech/),
+a company with a mission to solve some of the most pressing communication challenges that humankind faces,
+starting with Internet blackouts.
 
 ## Licence
 
