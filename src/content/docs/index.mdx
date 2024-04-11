@@ -20,8 +20,8 @@ The purpose of this website is to gather feedback before writing an I-D.
 
 ## Introduction
 
-Despacito is a protocol for rate limiting messages forwarded by a
-[reverse proxy](https://ddos.report/tactics/reverse-proxies/) (aka _CDN_) to an origin server.
+Despacito is a rate limiting protocol for
+[Layer 7 reverse proxies](https://ddos.report/tactics/reverse-proxies/#application-layer-proxy) (aka _CDNs_).
 It allows the origin server to provide the proxy with client information (e.g. user id, rate limits)
 and origin server state (e.g. current capacity),
 so that the proxy can decide whether to forward messages from any given client.
