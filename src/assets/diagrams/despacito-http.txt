@@ -8,19 +8,22 @@ participant Origin server
 Client->>Authorisation service: Request access
 activate Authorisation service
 note over Authorisation service: Check credentials
-Authorisation service->>Client: Grant access
+note over Authorisation service: Issue certificate
+Authorisation service->>Client: Certificate
 deactivate Authorisation service
 
-loop Every message whilst authorisation is valid
-    Client->>HTTP Proxy: Send HTTP request
+loop Every request whilst certificate is valid
+    note over Client: Sign payload, if required
+    Client->>HTTP Proxy: HTTP request with certificate and signature (if available) in headers
     activate HTTP Proxy
-    note over HTTP Proxy: Check authorisation
+    note over HTTP Proxy: Validate certificate
+    note over HTTP Proxy: Validate signature, if required
     note over HTTP Proxy: Check rate limits
-    HTTP Proxy->>Origin server: Forward HTTP request
+    HTTP Proxy->>Origin server: HTTP request
     activate Origin server
     note over Origin server: Process request
-    Origin server->>HTTP Proxy: Send HTTP response
+    Origin server->>HTTP Proxy: HTTP response
     deactivate Origin server
-    HTTP Proxy->>Client: Forward HTTP response
+    HTTP Proxy->>Client: HTTP response
     deactivate HTTP Proxy
 end

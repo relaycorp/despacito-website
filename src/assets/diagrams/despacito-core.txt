@@ -8,14 +8,17 @@ participant Origin server
 Client->>Authorisation service: Request access
 activate Authorisation service
 note over Authorisation service: Check credentials
-Authorisation service->>Client: Grant access
+note over Authorisation service: Issue certificate
+Authorisation service->>Client: Certificate
 deactivate Authorisation service
 
-loop Every message whilst authorisation is valid
-    Client->>Proxy: Send message
+loop Every message whilst certificate is valid
+    note over Client: Sign message, if required
+    Client->>Proxy: Send message and certificate (as well as signature, if available)
     activate Proxy
-    note over Proxy: Check authorisation
+    note over Proxy: Validate certificate
+    note over Proxy: Validate signature, if required
     note over Proxy: Check rate limits
-    Proxy->>Origin server: Proxy message
+    Proxy->>Origin server: Forward message
     deactivate Proxy
 end
